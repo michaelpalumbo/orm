@@ -1,0 +1,75 @@
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../config/connection');
+const Category = require('./Category')
+// create our User model
+class Product extends Model {}
+
+// define table columns and configuration
+
+Product.init(
+    {
+        // TABLE COLUMN DEFINITIONS GO HERE
+        // define an id column
+        id: {
+            // use the special Sequelize DataTypes object provide what type of data it is
+            type: DataTypes.INTEGER,
+            // this is the equivalent of SQL's `NOT NULL` option
+            allowNull: false,
+            // instruct that this is the Primary Key
+            primaryKey: true,
+            // turn on auto increment
+            autoIncrement: true
+        },
+        // cat name
+        product_name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        // define an email column
+        price: {
+            type: DataTypes.DECIMAL,
+            allowNull: false,
+            defaultValue: 10,
+            validate: {
+                isDecimal: true
+            }
+ 
+        },
+        stock: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 10,
+            validate: {
+                isInt: true
+            }
+        },
+        category_int:{
+            type: DataTypes.INTEGER,
+            references: {
+                // This is a reference to another model
+                model: Category,
+          
+                // This is the column name of the referenced model
+                key: 'id',
+            }
+
+        }
+    },
+    {
+        // TABLE CONFIGURATION OPTIONS GO HERE (https://sequelize.org/v5/manual/models-definition.html#configuration))
+
+        // pass in our imported sequelize connection (the direct connection to our database)
+        sequelize,
+        // don't automatically create createdAt/updatedAt timestamp fields
+        timestamps: false,
+        // don't pluralize name of database table
+        freezeTableName: true,
+        // use underscores instead of camel-casing (i.e. `comment_text` and not `commentText`)
+        underscored: true,
+        // make it so our model name stays lowercase in the database
+        modelName: 'product'
+    }
+);
+
+module.exports = Product;
+
